@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="axionmade — ein Thinktank, der innovative Projekte im Technologiesektor finanziert.">
+    <title>axionmade</title>
+    <style>
+        :root {
+            --blue: #2B7CE5;
+            --dark: #1d1d1f;
+            --gray: #6e6e73;
+            --border: #e8e8ed;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body { height: 100%; }
+
+        body {
+            background: #fff;
+            font-family: 'Consolas', 'Courier New', monospace;
+            color: var(--dark);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ── Header ── */
+        header {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            z-index: 100;
+            background: rgba(255,255,255,0.82);
+            backdrop-filter: saturate(180%) blur(14px);
+            -webkit-backdrop-filter: saturate(180%) blur(14px);
+        }
+
+        .lang-switch { display: flex; gap: 8px; }
+
+        .lang-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 5px 13px;
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            background: transparent;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 12px;
+            letter-spacing: 0.04em;
+            color: var(--gray);
+            text-decoration: none;
+            transition: border-color 0.18s, color 0.18s, background 0.18s;
+        }
+
+        .lang-btn:hover { border-color: var(--blue); color: var(--blue); }
+
+        .lang-btn.active {
+            border-color: var(--blue);
+            color: var(--blue);
+            background: rgba(43,124,229,0.07);
+        }
+
+        .flag { font-size: 14px; line-height: 1; }
+
+        /* ── Main ── */
+        main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 120px 10vw 80px;
+            text-align: center;
+        }
+
+        /* ── Hero name (the "logo") ── */
+        .hero-name {
+            font-size: clamp(52px, 9vw, 112px);
+            font-weight: 400;
+            letter-spacing: -0.02em;
+            line-height: 1.1;
+        }
+
+        .axion { color: var(--blue); }
+
+        /* ── Cursor ── */
+        .cursor {
+            display: inline-block;
+            width: 0.06em;
+            min-width: 3px;
+            height: 0.82em;
+            background: var(--dark);
+            vertical-align: text-bottom;
+            border-radius: 1px;
+            margin-left: 2px;
+            animation: blink 1s step-end infinite;
+        }
+
+        .cursor.off { display: none; }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50%       { opacity: 0; }
+        }
+
+        /* ── Description area ── */
+        .desc-area {
+            margin-top: 2.6em;
+            font-size: clamp(13px, 1.8vw, 16px);
+            line-height: 1.9;
+            color: var(--gray);
+            max-width: 580px;
+        }
+
+        #desc { display: inline; }
+
+        .cursor-desc {
+            height: 0.82em;
+            min-width: 2px;
+        }
+
+        /* ── Footer ── */
+        footer {
+            padding: 26px 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 24px;
+            border-top: 1px solid var(--border);
+        }
+
+        footer a {
+            font-size: 11px;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            color: var(--gray);
+            text-decoration: none;
+            transition: color 0.18s;
+        }
+
+        footer a:hover { color: var(--dark); }
+
+        .sep { width: 1px; height: 11px; background: var(--border); }
+
+        .copy { font-size: 11px; letter-spacing: 0.04em; color: #c0c0c5; }
+
+        /* ── Modals ── */
+        .overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.32);
+            z-index: 200;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+        }
+
+        .overlay.open { display: flex; }
+
+        .modal {
+            background: #fff;
+            border-radius: 20px;
+            padding: 48px 52px;
+            max-width: 640px;
+            width: 100%;
+            max-height: 82vh;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 0 28px 80px rgba(0,0,0,0.13), 0 0 0 1px rgba(0,0,0,0.04);
+            animation: popIn 0.22s cubic-bezier(.22,.6,.36,1) forwards;
+        }
+
+        @keyframes popIn {
+            from { opacity: 0; transform: scale(0.96) translateY(8px); }
+            to   { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        .modal-x {
+            position: absolute;
+            top: 18px; right: 20px;
+            width: 28px; height: 28px;
+            border-radius: 50%;
+            border: none;
+            background: var(--border);
+            cursor: pointer;
+            font-size: 17px;
+            color: var(--gray);
+            font-family: inherit;
+            display: flex; align-items: center; justify-content: center;
+            transition: background 0.15s, color 0.15s;
+        }
+
+        .modal-x:hover { background: #d8d8de; color: var(--dark); }
+
+        .modal h2 {
+            font-size: 19px;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            color: var(--dark);
+            margin-bottom: 28px;
+        }
+
+        .modal h3 {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.07em;
+            color: var(--dark);
+            margin: 22px 0 8px;
+        }
+
+        .modal p { font-size: 13.5px; line-height: 1.78; color: var(--gray); }
+
+        .modal::-webkit-scrollbar { width: 4px; }
+        .modal::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="lang-switch">
+            <a href="../" class="lang-btn"><span class="flag">🇬🇧</span> EN</a>
+            <a href="./" class="lang-btn active"><span class="flag">🇩🇪</span> DE</a>
+        </div>
+    </header>
+
+    <main>
+        <h1 class="hero-name" aria-live="polite">
+            <span id="typed-name"></span><span class="cursor" id="cur-hero"></span>
+        </h1>
+
+        <div class="desc-area">
+            <span id="desc"></span><span class="cursor cursor-desc off" id="cur-desc"></span>
+        </div>
+    </main>
+
+    <footer>
+        <a href="#" onclick="show('impressum');return false;">Impressum</a>
+        <div class="sep"></div>
+        <a href="#" onclick="show('datenschutz');return false;">Datenschutzerklärung</a>
+        <div class="sep"></div>
+        <span class="copy">© 2025 axionmade</span>
+    </footer>
+
+    <!-- Impressum -->
+    <div class="overlay" id="impressum" role="dialog" aria-modal="true">
+        <div class="modal">
+            <button class="modal-x" onclick="hide('impressum')" aria-label="Schließen">×</button>
+            <h2>Impressum</h2>
+            <h3>Angaben gemäß § 5 TMG</h3>
+            <p>axionmade GmbH<br>[Straße &amp; Hausnummer]<br>[PLZ Ort]<br>Deutschland</p>
+            <h3>Vertreten durch</h3>
+            <p>[Geschäftsführer]</p>
+            <h3>Kontakt</h3>
+            <p>E-Mail: info@axionmade.com</p>
+            <h3>Handelsregister</h3>
+            <p>Registergericht: [Amtsgericht]<br>Registernummer: [HRB …]</p>
+            <h3>Umsatzsteuer-ID</h3>
+            <p>Umsatzsteuer-Identifikationsnummer gemäß § 27 a Umsatzsteuergesetz:<br>DE [USt-ID]</p>
+            <h3>Haftungsausschluss</h3>
+            <p>Die Inhalte dieser Website wurden mit größter Sorgfalt erstellt. Für die Richtigkeit, Vollständigkeit und Aktualität der Inhalte können wir jedoch keine Gewähr übernehmen.</p>
+            <h3>Streitschlichtung</h3>
+            <p>Die Europäische Kommission stellt eine Plattform zur Online-Streitbeilegung (OS) bereit: https://ec.europa.eu/consumers/odr/. Wir sind nicht bereit oder verpflichtet, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen.</p>
+        </div>
+    </div>
+
+    <!-- Datenschutzerklärung -->
+    <div class="overlay" id="datenschutz" role="dialog" aria-modal="true">
+        <div class="modal">
+            <button class="modal-x" onclick="hide('datenschutz')" aria-label="Schließen">×</button>
+            <h2>Datenschutzerklärung</h2>
+            <h3>1. Datenschutz auf einen Blick</h3>
+            <p>Die folgenden Hinweise geben einen einfachen Überblick darüber, was mit Ihren personenbezogenen Daten passiert, wenn Sie diese Website besuchen.</p>
+            <h3>2. Datenerfassung auf dieser Website</h3>
+            <p>Diese Website verwendet keine Cookies, Analyse-Dienste oder Tracking-Tools von Drittanbietern. Es werden keine personenbezogenen Daten aktiv erhoben, die über das technisch notwendige Maß hinausgehen.</p>
+            <h3>3. Server-Log-Dateien</h3>
+            <p>Der Hosting-Anbieter erhebt und speichert automatisch Informationen in Server-Log-Dateien, die Ihr Browser übermittelt. Diese Daten werden nicht mit anderen Datenquellen zusammengeführt. Rechtsgrundlage ist Art. 6 Abs. 1 lit. f DSGVO.</p>
+            <h3>4. Verantwortliche Stelle</h3>
+            <p>axionmade GmbH<br>E-Mail: info@axionmade.com</p>
+            <h3>5. Ihre Rechte</h3>
+            <p>Sie haben jederzeit das Recht auf unentgeltliche Auskunft über Herkunft, Empfänger und Zweck Ihrer gespeicherten personenbezogenen Daten (Art. 15 DSGVO) sowie das Recht auf Berichtigung (Art. 16), Löschung (Art. 17), Einschränkung der Verarbeitung (Art. 18) und Beschwerde bei einer Aufsichtsbehörde (Art. 77 DSGVO).</p>
+        </div>
+    </div>
+
+    <script>
+        const NAME = 'axionmade;';
+        const DESC = 'axionmade ist ein Thinktank, der innovative Projekte im Technologiesektor finanziert und unterstützt — von visionären Ideen bis zur konkreten Umsetzung.';
+
+        const nameEl  = document.getElementById('typed-name');
+        const curHero = document.getElementById('cur-hero');
+        const curDesc = document.getElementById('cur-desc');
+        const descEl  = document.getElementById('desc');
+
+        let ni = 0, di = 0;
+        const AXION_LEN = 5;
+
+        function typeName() {
+            if (ni < NAME.length) {
+                ni++;
+                const blue  = NAME.slice(0, Math.min(ni, AXION_LEN));
+                const black = NAME.slice(AXION_LEN, ni);
+                nameEl.innerHTML = (blue  ? `<span class="axion">${blue}</span>` : '')
+                                 + (black ? black : '');
+                setTimeout(typeName, 150 + Math.random() * 80);
+            } else {
+                setTimeout(() => {
+                    curHero.classList.add('off');
+                    curDesc.classList.remove('off');
+                    setTimeout(typeDesc, 3000);
+                }, 300);
+            }
+        }
+
+        function typeDesc() {
+            if (di < DESC.length) {
+                descEl.textContent += DESC[di++];
+                setTimeout(typeDesc, 50 + Math.random() * 30);
+            } else {
+                curDesc.classList.add('off');
+            }
+        }
+
+        typeName();
+
+        /* ── modals ── */
+        function show(id) {
+            const el = document.getElementById(id);
+            el.style.display = 'flex';
+            requestAnimationFrame(() => el.classList.add('open'));
+            document.body.style.overflow = 'hidden';
+        }
+
+        function hide(id) {
+            const el = document.getElementById(id);
+            el.classList.remove('open');
+            setTimeout(() => { el.style.display = ''; }, 10);
+            document.body.style.overflow = '';
+        }
+
+        document.querySelectorAll('.overlay').forEach(o => {
+            o.addEventListener('click', e => { if (e.target === o) hide(o.id); });
+        });
+
+        document.addEventListener('keydown', e => {
+            if (e.key === 'Escape')
+                document.querySelectorAll('.overlay.open').forEach(o => hide(o.id));
+        });
+    </script>
+</body>
+</html>
