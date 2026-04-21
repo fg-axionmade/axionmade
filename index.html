@@ -237,13 +237,11 @@
 
     <main>
         <!-- Hero: typed wordmark acts as the logo -->
-        <h1 class="hero-name" aria-live="polite">
-            <span id="typed-name"></span><span class="cursor" id="cur-hero"></span>
-        </h1>
+        <h1 class="hero-name"><span class="axion">axion</span>made;</h1>
 
         <!-- Description line (text + cursor) -->
         <div class="desc-area">
-            <span id="desc"></span><span class="cursor cursor-desc off" id="cur-desc"></span>
+            <span id="desc"></span><span class="cursor cursor-desc" id="cur-desc"></span>
         </div>
     </main>
 
@@ -304,29 +302,9 @@
         const curDesc  = document.getElementById('cur-desc');
         const descEl   = document.getElementById('desc');
 
-        let ni = 0, di = 0;
-        const AXION_LEN = 5; // "axion"
+        let di = 0;
 
-        /* 1 — type "axionmade;" immediately, axion always in blue */
-        function typeName() {
-            if (ni < NAME.length) {
-                ni++;
-                const blue  = NAME.slice(0, Math.min(ni, AXION_LEN));
-                const black = NAME.slice(AXION_LEN, ni);
-                nameEl.innerHTML = (blue  ? `<span class="axion">${blue}</span>` : '')
-                                 + (black ? black : '');
-                setTimeout(typeName, 150 + Math.random() * 80);
-            } else {
-                /* done — move cursor 2 lines down, blink 3 s */
-                setTimeout(() => {
-                    curHero.classList.add('off');
-                    curDesc.classList.remove('off');
-                    setTimeout(typeDesc, 3000);
-                }, 300);
-            }
-        }
-
-        /* 2 — type description */
+        /* type description after 3 s blink */
         function typeDesc() {
             if (di < DESC.length) {
                 descEl.textContent += DESC[di++];
@@ -336,7 +314,7 @@
             }
         }
 
-        typeName();
+        setTimeout(typeDesc, 3000);
 
         /* ── modals ── */
         function show(id) {
